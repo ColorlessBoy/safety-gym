@@ -1271,6 +1271,14 @@ class Engine(gym.Env, gym.utils.EzPickle):
             # Constraint violations
             info.update(self.cost())
 
+            # Add Goal information
+            if self.task == 'goal':
+                info.update({"achieved_goal": self.world.robot_pos(),
+                            "desired_goal" : self.goal_pos})
+            elif self.task == 'push':
+                info.update({"achieved_goal": self.world.box_pos(),
+                            "desired_goal" : self.goal_pos})
+
             # Button timer (used to delay button resampling)
             self.buttons_timer_tick()
 
@@ -1302,6 +1310,27 @@ class Engine(gym.Env, gym.utils.EzPickle):
             self.done = True  # Maximum number of steps in an episode reached
 
         return self.obs(), reward, self.done, info
+    
+    def compute_reward(self, achieved_goal, desired_goal):
+
+        def goal_distance(goal_a, goal_b):
+            assert goal_a.shape == goal_b.shape
+            return np.linalg.norm(goal_a - goal_b, axis=-1)
+
+        # Return Sparse Reward.
+        # This is similar to gym.robotics.
+        if self.task in ['goal', 'push']:
+            d = goal_distance(achieved_goal, desired_goal)
+            return -(d > self.goal_size).astype(np.float32)
+        return None
+            
+    def dist_xy(self, pos):
+        ''' Return the distance from the robot to an XY position '''
+        pos = np.asarray(pos)
+        if pos.shape == (3,):
+            pos = pos[:2]
+        robot_pos = self.world.robot_pos()
+        return np.sqrt(np.sum(np.square(pos - robot_pos[:2])))
 
     def reward(self):
         ''' Calculate the dense component of reward.  Call exactly once per step '''
