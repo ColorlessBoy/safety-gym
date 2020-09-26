@@ -1323,6 +1323,15 @@ class Engine(gym.Env, gym.utils.EzPickle):
             d = goal_distance(achieved_goal, desired_goal)
             return -(d > self.goal_size).astype(np.float32)
         return None
+    
+    def get_goal(self):
+        if self.task == 'goal':
+            return {"achieved_goal": self.world.robot_pos(),
+                    "desired_goal" : self.goal_pos}
+        elif self.task == 'push':
+            return {"achieved_goal": self.world.box_pos(),
+                    "desired_goal" : self.goal_pos}
+        return None
             
     def dist_xy(self, pos):
         ''' Return the distance from the robot to an XY position '''
