@@ -96,6 +96,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
     # Default configuration (this should not be nested since it gets copied)
     DEFAULT = {
         'num_steps': 1000,  # Maximum number of environment steps in an episode
+        '_max_episode_steps': 100, # Maximum number of environment steps in an episode
 
         'action_noise': 0.0,  # Magnitude of independent per-component gaussian action noise
 
@@ -1120,6 +1121,16 @@ class Engine(gym.Env, gym.utils.EzPickle):
                 offset += k_size
             obs = flat_obs
         assert self.observation_space.contains(obs), f'Bad obs {obs} {self.observation_space}'
+
+        if self.task == 'goal':
+            return {'observation': obs,
+                    'achieved_goal': self.world.robot_pos(),
+                    'desired_goal': self.goal_pos}
+        elif self.task == 'push':
+            return {'observation': obs(),
+                    'achieved_goal': self.box_pos,
+                    'desired_goal': self.goal_pos}
+
         return obs
 
 
@@ -1271,14 +1282,6 @@ class Engine(gym.Env, gym.utils.EzPickle):
             # Constraint violations
             info.update(self.cost())
 
-            # Add Goal information
-            if self.task == 'goal':
-                info.update({"achieved_goal": self.world.robot_pos(),
-                            "desired_goal" : self.goal_pos})
-            elif self.task == 'push':
-                info.update({"achieved_goal": self.world.box_pos(),
-                            "desired_goal" : self.goal_pos})
-
             # Button timer (used to delay button resampling)
             self.buttons_timer_tick()
 
@@ -1311,7 +1314,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
 
         return self.obs(), reward, self.done, info
     
-    def compute_reward(self, achieved_goal, desired_goal):
+    def compute_reward(self, achieved_goal, desired_goal, info):
 
         def goal_distance(goal_a, goal_b):
             assert goal_a.shape == goal_b.shape
@@ -1322,15 +1325,6 @@ class Engine(gym.Env, gym.utils.EzPickle):
         if self.task in ['goal', 'push']:
             d = goal_distance(achieved_goal, desired_goal)
             return -(d > self.goal_size).astype(np.float32)
-        return None
-    
-    def get_goal(self):
-        if self.task == 'goal':
-            return {"achieved_goal": self.world.robot_pos(),
-                    "desired_goal" : self.goal_pos}
-        elif self.task == 'push':
-            return {"achieved_goal": self.world.box_pos(),
-                    "desired_goal" : self.goal_pos}
         return None
             
     def dist_xy(self, pos):
