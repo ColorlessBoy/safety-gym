@@ -96,7 +96,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
     # Default configuration (this should not be nested since it gets copied)
     DEFAULT = {
         'num_steps': 1000,  # Maximum number of environment steps in an episode
-        '_max_episode_steps': 100, # Maximum number of environment steps in an episode
+        '_max_episode_steps': 1000, # Maximum number of environment steps in an episode
 
         'action_noise': 0.0,  # Magnitude of independent per-component gaussian action noise
 
