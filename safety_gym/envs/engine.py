@@ -190,7 +190,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
         # reward_distance should be positive to encourage moving towards the goal
         # if reward_distance is 0, then the reward function is sparse
         'reward_distance': 1.0,  # Dense reward multiplied by the distance moved to the goal
-        'reward_goal': 1.0,  # Sparse reward for being inside the goal area
+        'reward_goal': 10.0,  # Sparse reward for being inside the goal area
         'reward_box_dist': 1.0,  # Dense reward for moving the robot towards the box
         'reward_box_goal': 1.0,  # Reward for moving the box towards the goal
         'reward_orientation': False,  # Reward for being upright
@@ -1324,7 +1324,8 @@ class Engine(gym.Env, gym.utils.EzPickle):
         # This is similar to gym.robotics.
         if self.task in ['goal', 'push']:
             d = goal_distance(achieved_goal, desired_goal)
-            return -(d > self.goal_size).astype(np.float32)
+            r = (d < self.goal_size).astype(np.float32)
+            return r*self.reward_goal + np.exp(-d) * 0.1
         return None
             
     def dist_xy(self, pos):
