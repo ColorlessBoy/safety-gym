@@ -315,6 +315,8 @@ class Engine(gym.Env, gym.utils.EzPickle):
 
         self.seed(self._seed)
         self.done = True
+        
+        self.goal_dim = 2
 
     def parse(self, config):
         ''' Parse a config dict - see self.DEFAULT for description '''
@@ -483,11 +485,6 @@ class Engine(gym.Env, gym.utils.EzPickle):
         if self.observation_flatten:
             self.obs_flat_size = sum([np.prod(i.shape) for i in self.obs_space_dict.values()])
             self.observation_space = gym.spaces.Box(-np.inf, np.inf, (self.obs_flat_size,), dtype=np.float32)
-            self.goal_dim = 0
-            self.goal_offset = 3 # handcraft: accelerate feature is before goal feature.
-            for key in obs_space_dict.keys():
-                if 'goal' in key:
-                    self.goal_dim += np.prod(obs_space_dict[key].shape)
         else:
             self.observation_space = gym.spaces.Dict(obs_space_dict)
 
@@ -1305,6 +1302,9 @@ class Engine(gym.Env, gym.utils.EzPickle):
         self.steps += 1
         if self.steps >= self.num_steps:
             self.done = True  # Maximum number of steps in an episode reached
+        
+        info['target_goal'] = self.goal_pos
+        info['achieved_goal'] = self.world.robot_pos()
 
         return self.obs(), reward, self.done, info
 
