@@ -483,6 +483,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
         if self.observation_flatten:
             self.obs_flat_size = sum([np.prod(i.shape) for i in self.obs_space_dict.values()])
             self.observation_space = gym.spaces.Box(-np.inf, np.inf, (self.obs_flat_size,), dtype=np.float32)
+            self.math_goal_dim = 2
             self.goal_dim = 0
             self.goal_offset = 3 # handcraft: accelerate feature is before goal feature.
             for key in obs_space_dict.keys():
