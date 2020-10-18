@@ -1123,10 +1123,9 @@ class Engine(gym.Env, gym.utils.EzPickle):
             obs = flat_obs
         assert self.observation_space.contains(obs), f'Bad obs {obs} {self.observation_space}'
 
-        return {'observation': obs,
-                'target_goal': self.goal_pos,
-                'achieved_goal': self.world.robot_pos()}
+        goal = self.goal_pos - self.world.robot_pos()
 
+        return np.concatenate((goal, obs), axis=-1)
 
     def cost(self):
         ''' Calculate the current costs and return a dict '''
