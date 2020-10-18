@@ -316,7 +316,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
         self.seed(self._seed)
         self.done = True
         
-        self.goal_dim = 2
+        self.goal_dim = 3
 
     def parse(self, config):
         ''' Parse a config dict - see self.DEFAULT for description '''
