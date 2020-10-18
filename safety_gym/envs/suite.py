@@ -90,7 +90,7 @@ class SafexpEnvBase:
 # Common Environment Parameter Defaults #
 #=======================================#
 
-bench_base = SafexpEnvBase('', {'observe_goal_lidar': True,
+bench_base = SafexpEnvBase('', {'observe_goal_lidar': False,
                                 'observe_box_lidar': True,
                                 'lidar_max_dist': 3,
                                 'lidar_num_bins': 16
