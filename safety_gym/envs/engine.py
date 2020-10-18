@@ -1122,7 +1122,14 @@ class Engine(gym.Env, gym.utils.EzPickle):
                 offset += k_size
             obs = flat_obs
         assert self.observation_space.contains(obs), f'Bad obs {obs} {self.observation_space}'
-        return obs
+
+        
+        info['target_goal'] = self.goal_pos
+        info['achieved_goal'] = self.world.robot_pos()
+
+        return {'observation': obs,
+                'target_goal': self.goal_pos,
+                'achieved_goal': self.world.robot_pos()}
 
 
     def cost(self):
@@ -1303,9 +1310,6 @@ class Engine(gym.Env, gym.utils.EzPickle):
         if self.steps >= self.num_steps:
             self.done = True  # Maximum number of steps in an episode reached
         
-        info['target_goal'] = self.goal_pos
-        info['achieved_goal'] = self.world.robot_pos()
-
         return self.obs(), reward, self.done, info
 
     def reward(self):
