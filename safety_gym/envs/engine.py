@@ -1123,10 +1123,6 @@ class Engine(gym.Env, gym.utils.EzPickle):
             obs = flat_obs
         assert self.observation_space.contains(obs), f'Bad obs {obs} {self.observation_space}'
 
-        
-        info['target_goal'] = self.goal_pos
-        info['achieved_goal'] = self.world.robot_pos()
-
         return {'observation': obs,
                 'target_goal': self.goal_pos,
                 'achieved_goal': self.world.robot_pos()}
