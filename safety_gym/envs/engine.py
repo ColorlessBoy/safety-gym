@@ -1305,6 +1305,10 @@ class Engine(gym.Env, gym.utils.EzPickle):
         self.steps += 1
         if self.steps >= self.num_steps:
             self.done = True  # Maximum number of steps in an episode reached
+        
+        pos = self.world.robot_pos()
+        if (pos < -5.0).any() or (pos > 5.0).any():
+            self.done = True
 
         return self.obs(), reward, self.done, info
 
