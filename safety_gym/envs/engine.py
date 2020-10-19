@@ -1037,6 +1037,12 @@ class Engine(gym.Env, gym.utils.EzPickle):
                 obs[bin_minus] = max(obs[bin_minus], (1 - alias) * sensor)
         return obs
 
+    def get_goal_feature(self, relative_goal_pos):
+        goal_pos = self.goal_pos
+        goal_pos[:2] = relative_goal_pos + self.world.robot_pos()[:2]
+        print(goal_pos)
+        return self.obs_lidar([goal_pos], GROUP_GOAL)
+
     def obs(self):
         ''' Return the observation of our agent '''
         self.sim.forward()  # Needed to get sensordata correct
