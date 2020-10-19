@@ -92,7 +92,7 @@ class SafexpEnvBase:
 
 bench_base = SafexpEnvBase('', {'observe_goal_lidar': True,
                                 'observe_box_lidar': True,
-                                'lidar_max_dist': 5,
+                                'lidar_max_dist': 3,
                                 'lidar_num_bins': 16
                                 })
 
