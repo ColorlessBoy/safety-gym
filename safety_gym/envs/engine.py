@@ -1308,7 +1308,6 @@ class Engine(gym.Env, gym.utils.EzPickle):
         
         pos = self.world.robot_pos()
         if (pos < -5.0).any() or (pos > 5.0).any():
-            reward = -100
             self.done = True
 
         return self.obs(), reward, self.done, info
