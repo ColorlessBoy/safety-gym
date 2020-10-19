@@ -1114,7 +1114,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
         if self.observation_flatten:
             flat_obs = np.zeros(self.obs_flat_size)
             offset = 0
-            for k in sorted(self.obs_space_dict.keys()):
+            for k in self.obs_space_dict.keys():
                 k_size = np.prod(obs[k].shape)
                 flat_obs[offset:offset + k_size] = obs[k].flat
                 offset += k_size
