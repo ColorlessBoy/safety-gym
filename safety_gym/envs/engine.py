@@ -1305,6 +1305,11 @@ class Engine(gym.Env, gym.utils.EzPickle):
                         self.build_goal()
                 else:
                     self.done = True
+        
+        pos = self.world.robot_pos()
+        if (pos > 3.0).any() or (pos < -3.0).any():
+            reward = -100
+            self.done = True
 
         # Timeout
         self.steps += 1
