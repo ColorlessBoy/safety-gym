@@ -1037,6 +1037,11 @@ class Engine(gym.Env, gym.utils.EzPickle):
                 obs[bin_minus] = max(obs[bin_minus], (1 - alias) * sensor)
         return obs
 
+    def get_goal_feature(self, relative_goal_pos):
+        goal_pos = self.goal_pos
+        goal_pos[:2] = relative_goal_pos + self.world.robot_pos()[:2]
+        return self.obs_lidar([goal_pos], GROUP_GOAL)
+
     def obs(self):
         ''' Return the observation of our agent '''
         self.sim.forward()  # Needed to get sensordata correct
@@ -1300,6 +1305,10 @@ class Engine(gym.Env, gym.utils.EzPickle):
         self.steps += 1
         if self.steps >= self.num_steps:
             self.done = True  # Maximum number of steps in an episode reached
+        
+        pos = self.world.robot_pos()
+        if np.linalg.norm(pos) > 3.0:
+            self.done = True
 
         return self.obs(), reward, self.done, info
 
