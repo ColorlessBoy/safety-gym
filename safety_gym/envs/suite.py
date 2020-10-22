@@ -159,7 +159,7 @@ goal3 = {
     'observe_pillars': True,
     'placements_extents': [-2.0, -2.0, 2.0, 2.0],
     'pillars_num': 8,
-    'reward_goal': 100,
+    'reward_goal': 10,
 }
 
 bench_goal_base = bench_base.copy('Goal', goal_all)
