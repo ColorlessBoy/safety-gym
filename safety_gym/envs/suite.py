@@ -150,16 +150,15 @@ goal2.update(goal_constrained)
 
 goal3 = {
     'observe_goal_lidar': True,
-    'lidar_max_dist': 4,
-    'lidar_num_bins': 36,
+    'lidar_max_dist': 3,
+    'lidar_num_bins': 24, 
     'pillars_size': 0.2,
     'pillars_keepout': 0.18,
     'pillars_height':0.1,
     'constrain_pillars': True,
     'observe_pillars': True,
-    'placements_extents': [-2.0, -2.0, 2.0, 2.0],
+    'placements_extents': [-1.5, -1.5, 1.5, 1.5],
     'pillars_num': 8,
-    'reward_goal': 10,
 }
 
 bench_goal_base = bench_base.copy('Goal', goal_all)
